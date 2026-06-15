@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central de Suporte · N1 → NOC / N2 / N3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1117;--panel:#161b22;--panel-2:#1c232d;--line:#2a323d;
+    --txt:#e6edf3;--muted:#8b98a9;--accent:#3fb950;--accent-2:#58a6ff;
+    --warn:#d29922;--danger:#f85149;--purple:#bc8cff;
+    --radius:14px;--shadow:0 18px 50px rgba(0,0,0,.55);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',sans-serif;
+    background:
+      radial-gradient(900px 500px at 100% -10%, rgba(88,166,255,.10), transparent 60%),
+      radial-gradient(700px 500px at -10% 110%, rgba(63,185,80,.10), transparent 60%),
+      var(--bg);
+    color:var(--txt);min-height:100vh;-webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4,.brand{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
+
+  /* ===== Header ===== */
+  header{
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;
+    padding:26px clamp(20px,5vw,60px);border-bottom:1px solid var(--line);
+    background:rgba(13,17,23,.6);backdrop-filter:blur(10px);position:sticky;top:0;z-index:50;
+  }
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#2da44e);
+    display:grid;place-items:center;font-size:22px;font-weight:700;box-shadow:0 8px 22px rgba(63,185,80,.35)}
+  .brand h1{font-size:1.35rem;line-height:1}
+  .brand span{font-size:.78rem;color:var(--muted);letter-spacing:.04em}
+  .head-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+  .btn{font-family:'Space Grotesk',sans-serif;border:none;cursor:pointer;font-weight:600;
+    padding:12px 20px;border-radius:11px;font-size:.92rem;display:inline-flex;align-items:center;gap:8px;
+    transition:transform .15s ease, box-shadow .2s ease, background .2s ease}
+  .btn:active{transform:scale(.96)}
+  .btn-primary{background:linear-gradient(135deg,var(--accent),#2da44e);color:#05210d;box-shadow:0 8px 22px rgba(63,185,80,.32)}
+  .btn-primary:hover{box-shadow:0 12px 30px rgba(63,185,80,.5)}
+  .btn-ghost{background:var(--panel-2);color:var(--txt);border:1px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--accent-2);color:var(--accent-2)}
+
+  /* ===== Menu discreto (⋯) ===== */
+  .menu-wrap{position:relative}
+  .menu-trigger{width:42px;height:42px;border-radius:11px;background:transparent;border:1px solid var(--line);
+    color:var(--muted);cursor:pointer;font-size:1.2rem;display:grid;place-items:center;transition:.18s;line-height:1}
+  .menu-trigger:hover{color:var(--txt);border-color:var(--accent-2);background:var(--panel-2)}
+  .menu-pop{position:absolute;right:0;top:calc(100% + 8px);background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;box-shadow:var(--shadow);min-width:230px;padding:6px;z-index:60;
+    opacity:0;visibility:hidden;transform:translateY(-6px);transition:.18s}
+  .menu-wrap.open .menu-pop{opacity:1;visibility:visible;transform:translateY(0)}
+  .menu-item{width:100%;text-align:left;background:none;border:none;cursor:pointer;color:var(--txt);
+    font-family:'Inter';font-size:.9rem;font-weight:500;padding:11px 13px;border-radius:8px;
+    display:flex;align-items:center;gap:10px;transition:.15s}
+  .menu-item:hover{background:var(--panel-2)}
+  .menu-item.danger{color:#ff8b84}
+  .menu-item.danger:hover{background:rgba(248,81,73,.12)}
+  .menu-item .ico{font-size:1rem;width:18px;text-align:center}
+  .menu-sep{height:1px;background:var(--line);margin:5px 8px}
+
+  /* ===== Trilha (progresso geral) ===== */
+  .trilha{padding:24px clamp(20px,5vw,60px) 4px}
+  .trilha-card{
+    background:linear-gradient(135deg,rgba(63,185,80,.10),rgba(88,166,255,.08));
+    border:1px solid var(--line);border-radius:18px;padding:22px 26px;position:relative;overflow:hidden;
+  }
+  .trilha-card::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;
+    background:radial-gradient(circle,rgba(63,185,80,.18),transparent 70%);pointer-events:none}
+  .trilha-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:16px}
+  .trilha-top h2{font-size:1.15rem;display:flex;align-items:center;gap:10px}
+  .trilha-msg{color:var(--muted);font-size:.85rem;margin-top:4px}
+  .trilha-pct{font-family:'Space Grotesk';font-weight:700;font-size:2.6rem;line-height:1;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .trilha-pct small{font-size:1rem;-webkit-text-fill-color:var(--muted);color:var(--muted)}
+  .mega-bar{height:14px;background:var(--panel-2);border-radius:12px;overflow:hidden;position:relative;border:1px solid var(--line)}
+  .mega-fill{height:100%;border-radius:12px;background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--purple));
+    background-size:200% 100%;transition:width 1s cubic-bezier(.2,.9,.3,1);animation:flow 4s linear infinite;position:relative}
+  @keyframes flow{0%{background-position:0 0}100%{background-position:200% 0}}
+  .mega-stops{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+  .mstop{display:flex;flex-direction:column;gap:7px}
+  .mstop .ml{display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:var(--muted);font-weight:600}
+  .mstop .ml b{font-family:'Space Grotesk';color:var(--txt);font-size:.88rem}
+  .mini-bar{height:7px;background:var(--panel-2);border-radius:8px;overflow:hidden}
+  .mini-fill{height:100%;border-radius:8px;transition:width .9s cubic-bezier(.2,.9,.3,1)}
+  .mini-fill.c1{background:linear-gradient(90deg,#3fb950,#56d364)}
+  .mini-fill.c2{background:linear-gradient(90deg,#d29922,#e3b341)}
+  .mini-fill.c3{background:linear-gradient(90deg,#bc8cff,#58a6ff)}
+  @media(max-width:640px){.mega-stops{grid-template-columns:1fr}}
+
+  /* ===== Tabs ===== */
+  .tabs{display:flex;gap:6px;padding:0 clamp(20px,5vw,60px);border-bottom:1px solid var(--line);
+    background:rgba(13,17,23,.4);position:sticky;top:99px;z-index:40;overflow-x:auto}
+  .tab{font-family:'Space Grotesk';background:none;border:none;cursor:pointer;color:var(--muted);
+    font-size:.96rem;font-weight:600;padding:16px 18px;position:relative;white-space:nowrap;transition:color .2s}
+  .tab:hover{color:var(--txt)}
+  .tab.active{color:var(--txt)}
+  .tab.active::after{content:"";position:absolute;left:18px;right:18px;bottom:-1px;height:3px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:3px 3px 0 0}
+  .tab .badge{background:var(--panel-2);color:var(--muted);font-size:.72rem;padding:2px 8px;border-radius:20px;margin-left:6px}
+
+  .view{display:none;animation:fade .35s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ===== Stats ===== */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;padding:30px clamp(20px,5vw,60px) 10px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;position:relative;overflow:hidden}
+  .stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c)}
+  .stat .num{font-family:'Space Grotesk';font-size:2rem;font-weight:700;line-height:1}
+  .stat .lbl{color:var(--muted);font-size:.82rem;margin-top:4px;text-transform:uppercase;letter-spacing:.08em}
+
+  /* ===== Toolbar ===== */
+  .toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px clamp(20px,5vw,60px)}
+  .search{flex:1;min-width:220px;display:flex;align-items:center;gap:10px;background:var(--panel);
+    border:1px solid var(--line);border-radius:11px;padding:11px 16px}
+  .search input{background:none;border:none;color:var(--txt);font-family:inherit;font-size:.92rem;width:100%;outline:none}
+  .search input::placeholder{color:var(--muted)}
+  .filters{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:9px 16px;border-radius:30px;
+    font-size:.85rem;cursor:pointer;font-weight:500;transition:.18s;font-family:'Space Grotesk'}
+  .chip:hover{color:var(--txt)}
+  .chip.active{background:var(--txt);color:var(--bg);border-color:var(--txt)}
+
+  /* ===== Board ===== */
+  .board{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px;padding:20px clamp(20px,5vw,60px) 80px;align-items:start}
+  .col{background:linear-gradient(180deg,var(--panel),rgba(22,27,34,.4));border:1px solid var(--line);border-radius:var(--radius);padding:16px;min-height:160px}
+  .col-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding:0 4px}
+  .col-head h3{font-size:1rem;display:flex;align-items:center;gap:9px}
+  .dot{width:10px;height:10px;border-radius:50%}
+  .count{background:var(--panel-2);color:var(--muted);font-size:.78rem;padding:2px 10px;border-radius:20px;font-weight:600}
+
+  .task{background:var(--panel-2);border:1px solid var(--line);border-radius:11px;padding:14px;margin-bottom:12px;
+    cursor:grab;position:relative;transition:transform .15s ease, border-color .2s ease, box-shadow .2s ease;animation:rise .4s ease both}
+  .task:hover{border-color:var(--accent-2);box-shadow:0 8px 20px rgba(0,0,0,.4);transform:translateY(-2px)}
+  .task.dragging{opacity:.4;border-style:dashed}
+  .task .ptag{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 9px;border-radius:6px;margin-bottom:8px}
+  .p-alta{background:rgba(248,81,73,.16);color:#ff7b72}
+  .p-media{background:rgba(210,153,34,.16);color:#e3b341}
+  .p-baixa{background:rgba(63,185,80,.16);color:#56d364}
+  .task h4{font-size:.98rem;font-weight:600;font-family:'Inter';margin-bottom:6px;line-height:1.3}
+  .task p{color:var(--muted);font-size:.85rem;line-height:1.5;margin-bottom:10px}
+  .task .meta{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.78rem;color:var(--muted)}
+  .who{display:flex;align-items:center;gap:7px}
+  .ava{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:.7rem;font-weight:700;color:#05210d;font-family:'Space Grotesk'}
+  .task .due{display:flex;align-items:center;gap:5px}
+  .due.late{color:var(--danger);font-weight:600}
+  .empty{color:var(--muted);font-size:.85rem;text-align:center;padding:24px 0;border:1.5px dashed var(--line);border-radius:10px}
+  .periodic-note{color:var(--muted);font-size:.76rem;line-height:1.5;padding:8px 10px 10px;border-radius:8px;background:rgba(188,140,255,.07);border:1px solid rgba(188,140,255,.18);margin-bottom:12px}
+  @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ===== Objetivos ===== */
+  .section-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+    padding:30px clamp(20px,5vw,60px) 6px}
+  .section-head h2{font-size:1.4rem;display:flex;align-items:center;gap:10px}
+  .section-head .sub{color:var(--muted);font-size:.88rem;margin-top:4px;font-family:'Inter'}
+  .hint{display:inline-flex;align-items:center;gap:7px;color:var(--muted);font-size:.8rem;
+    background:var(--panel-2);border:1px solid var(--line);padding:7px 13px;border-radius:20px}
+  .goals{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px;padding:18px clamp(20px,5vw,60px) 30px}
+  .goal{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;padding-left:42px;
+    position:relative;overflow:hidden;cursor:pointer;transition:border-color .2s, box-shadow .2s, transform .15s, opacity .2s;animation:rise .4s ease both;
+    display:flex;flex-direction:column}
+  .goal:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:var(--shadow)}
+  .goal::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gc,var(--accent))}
+  .goal.dragging{opacity:.35;border-style:dashed;border-color:var(--accent);transform:scale(.98)}
+  .goal.drop-target{border-color:var(--accent-2);box-shadow:0 0 0 2px var(--accent-2) inset}
+  .grip{position:absolute;left:10px;top:0;bottom:0;width:24px;display:flex;align-items:center;justify-content:center;
+    color:var(--muted);cursor:grab;font-size:1.1rem;letter-spacing:-2px;transition:color .2s}
+  .grip:hover{color:var(--accent)}
+  .grip:active{cursor:grabbing}
+  .goal .gtop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+  .goal .gstatus{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:4px 10px;border-radius:20px}
+  .gs-andamento{background:rgba(210,153,34,.16);color:#e3b341}
+  .gs-planejado{background:rgba(88,166,255,.16);color:#79c0ff}
+  .gs-concluido{background:rgba(63,185,80,.16);color:#56d364}
+  .goal h3{font-size:1.1rem;margin-bottom:8px;line-height:1.3}
+  .goal p{color:var(--muted);font-size:.88rem;line-height:1.55;margin-bottom:16px}
+  .prog-wrap{margin-top:auto}
+  .prog-lbl{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .prog-bar{height:8px;background:var(--panel-2);border-radius:10px;overflow:hidden}
+  .prog-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .6s cubic-bezier(.2,.9,.3,1)}
+
+  /* ===== Aptidões ===== */
+  .skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:18px;padding:18px clamp(20px,5vw,60px) 80px}
+  .skill{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;padding-left:42px;
+    position:relative;cursor:pointer;transition:border-color .2s, box-shadow .2s, transform .15s, opacity .2s;animation:rise .4s ease both}
+  .skill:hover{border-color:var(--purple);transform:translateY(-3px);box-shadow:var(--shadow)}
+  .skill.dragging{opacity:.35;border-style:dashed;border-color:var(--purple);transform:scale(.98)}
+  .skill.drop-target{border-color:var(--accent-2);box-shadow:0 0 0 2px var(--accent-2) inset}
+  .skill-grip{position:absolute;left:0;top:0;bottom:0;width:34px;display:flex;align-items:center;justify-content:center;
+    color:var(--muted);cursor:grab;font-size:1.1rem;letter-spacing:-2px;transition:color .2s;border-radius:var(--radius) 0 0 var(--radius)}
+  .skill-grip:hover{color:var(--purple)}
+  .skill-grip:active{cursor:grabbing}
+  .skill .stop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px}
+  .skill h3{font-size:1.05rem;line-height:1.3}
+  .skill .cat{display:inline-block;font-size:.72rem;color:var(--muted);background:var(--panel-2);padding:3px 9px;border-radius:6px;margin-top:6px}
+  .level-tag{font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;font-family:'Space Grotesk'}
+  .lv1{background:rgba(248,81,73,.16);color:#ff7b72}
+  .lv2{background:rgba(210,153,34,.16);color:#e3b341}
+  .lv3{background:rgba(88,166,255,.16);color:#79c0ff}
+  .lv4{background:rgba(188,140,255,.18);color:#d2a8ff}
+  .skill .desc{color:var(--muted);font-size:.86rem;line-height:1.5;margin:10px 0 10px}
+  .skill-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .skill-owner,.skill-proof{display:inline-flex;align-items:center;gap:5px;font-size:.74rem;font-weight:600;padding:4px 10px;border-radius:20px}
+  .skill-owner{background:rgba(88,166,255,.12);color:#79c0ff}
+  .skill-proof{background:rgba(63,185,80,.12);color:#56d364}
+  .skill-proof-inline{color:rgba(86,211,100,.8);font-weight:500}
+
+  /* ── Analistas ── */
+  .analysts{display:grid;grid-template-columns:repeat(auto-fill,minmax(370px,1fr));gap:20px;padding:18px clamp(20px,5vw,60px) 80px}
+  .analyst-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;padding-left:44px;
+    position:relative;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .15s,opacity .2s;animation:rise .4s ease both;display:flex;flex-direction:column;gap:14px}
+  .analyst-card:hover{border-color:var(--accent-2);transform:translateY(-3px);box-shadow:var(--shadow)}
+  .analyst-card.dragging{opacity:.35;border-style:dashed;border-color:var(--accent-2);transform:scale(.98)}
+  .analyst-card.drop-target{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+  .analyst-grip{position:absolute;left:0;top:0;bottom:0;width:34px;display:flex;align-items:center;justify-content:center;
+    color:var(--muted);cursor:grab;font-size:1.1rem;letter-spacing:-2px;transition:color .2s;border-radius:var(--radius) 0 0 var(--radius)}
+  .analyst-grip:hover{color:var(--accent-2)}
+  .analyst-grip:active{cursor:grabbing}
+  /* cabeçalho do card */
+  .analyst-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .analyst-avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:1.1rem;font-weight:700;
+    font-family:'Space Grotesk';color:#05210d;flex-shrink:0}
+  .analyst-info{flex:1;min-width:0}
+  .analyst-info h3{font-size:1.05rem;line-height:1.2;margin-bottom:4px}
+  .analyst-role{font-size:.78rem;color:var(--muted)}
+  .analyst-target{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;padding:3px 9px;border-radius:20px;background:rgba(88,166,255,.12);color:#79c0ff;margin-top:6px}
+  /* tempo na empresa */
+  .analyst-tenure{display:flex;gap:16px;flex-wrap:wrap}
+  .analyst-tenure-item{display:flex;flex-direction:column;gap:2px}
+  .analyst-tenure-item .tl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+  .analyst-tenure-item .tv{font-size:.92rem;font-weight:600;font-family:'Space Grotesk'}
+  /* seções internas */
+  .analyst-section{border-top:1px solid var(--line);padding-top:12px}
+  .analyst-section h4{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:8px}
+  /* certificações */
+  .cert-tag{display:inline-flex;align-items:center;gap:6px;font-size:.76rem;font-weight:600;padding:4px 10px;border-radius:20px;margin:3px 4px 3px 0}
+  .cert-concluido{background:rgba(63,185,80,.12);color:#56d364}
+  .cert-processo{background:rgba(210,153,34,.12);color:#e3b341}
+  /* projetos */
+  .proj-item{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:8px}
+  .proj-item:last-child{margin-bottom:0}
+  .proj-item .proj-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+  .proj-item .proj-title{font-size:.9rem;font-weight:600}
+  .proj-item .proj-date{font-size:.74rem;color:var(--muted);white-space:nowrap}
+  .proj-item .proj-desc{font-size:.82rem;color:var(--muted);line-height:1.5}
+  /* aptidões confirmadas no card */
+  .analyst-skills-tags{display:flex;flex-wrap:wrap;gap:6px}
+  .analyst-skill-tag{display:inline-flex;align-items:center;gap:5px;font-size:.74rem;font-weight:600;padding:4px 10px;border-radius:20px;background:rgba(188,140,255,.12);color:#d2a8ff}
+  /* toggle aptidões */
+  .skills-toggle{width:100%;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+    padding:0;font-family:'Space Grotesk';font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;
+    transition:color .18s}
+  .skills-toggle:hover{color:var(--txt)}
+  .skills-count{font-weight:600;color:var(--accent-2);margin-left:5px}
+  .skills-chevron{font-size:.85rem;transition:transform .2s ease;display:inline-block}
+  .analyst-skills-body{overflow:hidden;max-height:400px;transition:max-height .28s ease,opacity .22s ease;opacity:1;margin-top:8px}
+  .analyst-skills-body.collapsed{max-height:0;opacity:0;margin-top:0}
+  /* popup analista - add rows */
+  .analyst-row-add{display:grid;grid-template-columns:1fr auto auto auto;gap:8px;align-items:center}
+  .analyst-proj-add{display:flex;flex-direction:column;gap:8px}
+  .analyst-proj-add input[type=date]{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--txt);font-family:'Inter';font-size:.92rem;outline:none;width:100%}
+  .analyst-proj-add textarea{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--txt);font-family:'Inter';font-size:.92rem;outline:none;transition:border-color .2s;width:100%}
+  .analyst-proj-add textarea:focus,.analyst-proj-add input:focus{border-color:var(--accent-2)}
+  .analyst-row-add input,.analyst-row-add select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--txt);font-family:'Inter';font-size:.92rem;outline:none;transition:border-color .2s;width:100%}
+  .analyst-row-add input:focus,.analyst-row-add select:focus{border-color:var(--accent-2)}
+  .analyst-row-add select{cursor:pointer}
+  @media(max-width:560px){.analyst-row-add{grid-template-columns:1fr 1fr;}.analyst-row-add .comp-add-btn{grid-column:1/-1}}
+
+  /* ── Competentes no popup ── */
+  .competentes-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;min-height:0}
+  .competentes-list:empty{margin-bottom:0}
+  .comp-row{display:flex;align-items:center;gap:8px;background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:9px 12px;animation:rise .25s ease both}
+  .comp-row .comp-name{font-size:.9rem;font-weight:600;color:var(--txt);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .comp-row .comp-date{font-size:.78rem;color:var(--muted);white-space:nowrap}
+  .comp-row .comp-del{background:none;border:none;cursor:pointer;color:var(--muted);font-size:.95rem;line-height:1;padding:2px 4px;border-radius:5px;transition:.15s;flex-shrink:0}
+  .comp-row .comp-del:hover{color:var(--danger)}
+  .competentes-add{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center}
+  .competentes-add input{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--txt);font-family:'Inter';font-size:.92rem;outline:none;transition:border-color .2s;width:100%}
+  .competentes-add input:focus{border-color:var(--accent-2)}
+  .comp-add-btn{padding:10px 14px!important;font-size:.85rem!important;white-space:nowrap}
+  @media(max-width:480px){.competentes-add{grid-template-columns:1fr 1fr;}.comp-add-btn{grid-column:1/-1}}
+  .dots{display:flex;gap:6px}
+  .lvl-dot{flex:1;height:7px;border-radius:6px;background:var(--panel-2)}
+  .lvl-dot.on{background:linear-gradient(90deg,var(--purple),var(--accent-2))}
+
+  /* ===== Popup ===== */
+  .overlay{position:fixed;inset:0;background:rgba(5,8,12,.7);backdrop-filter:blur(6px);
+    display:flex;align-items:center;justify-content:center;padding:20px;z-index:100;opacity:0;pointer-events:none;transition:opacity .25s ease}
+  .overlay.open{opacity:1;pointer-events:auto}
+  .popup{width:min(560px,100%);max-height:92vh;overflow-y:auto;background:var(--panel);border:1px solid var(--line);
+    border-radius:18px;box-shadow:var(--shadow);transform:translateY(20px) scale(.97);transition:transform .3s cubic-bezier(.2,.9,.3,1)}
+  .overlay.open .popup{transform:translateY(0) scale(1)}
+  .popup-head{display:flex;align-items:center;justify-content:space-between;padding:22px 24px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2}
+  .popup-head h2{font-size:1.2rem}
+  .x{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);width:36px;height:36px;border-radius:9px;cursor:pointer;font-size:1.1rem;transition:.18s}
+  .x:hover{color:var(--danger);border-color:var(--danger)}
+  .popup-body{padding:24px;display:grid;gap:18px}
+  .field label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:7px;font-weight:600;letter-spacing:.03em;text-transform:uppercase}
+  .field input,.field textarea,.field select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--txt);font-family:'Inter';font-size:.95rem;outline:none;transition:border-color .2s}
+  .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent-2)}
+  .field textarea{resize:vertical;min-height:80px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .seg{display:flex;gap:8px}
+  .seg label{flex:1;cursor:pointer}
+  .seg input{display:none}
+  .seg span{display:block;text-align:center;padding:10px;border-radius:9px;border:1px solid var(--line);font-size:.85rem;font-weight:600;color:var(--muted);transition:.18s;font-family:'Space Grotesk'}
+  .seg input:checked + span{background:var(--accent);color:#05210d;border-color:var(--accent)}
+  .seg.purple input:checked + span{background:var(--purple);color:#1a0d2e;border-color:var(--purple)}
+  .rangewrap{display:flex;align-items:center;gap:14px}
+  .rangewrap input[type=range]{flex:1;accent-color:var(--accent)}
+  .rangewrap .rv{font-family:'Space Grotesk';font-weight:700;font-size:1.1rem;min-width:50px;text-align:right}
+  .popup-foot{display:flex;justify-content:space-between;gap:12px;padding:18px 24px;border-top:1px solid var(--line);position:sticky;bottom:0;background:var(--panel)}
+  .btn-danger{background:transparent;border:1px solid var(--danger);color:var(--danger)}
+  .btn-danger:hover{background:var(--danger);color:#fff}
+
+  @media(max-width:520px){.row2{grid-template-columns:1fr}.seg{flex-direction:column}}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:10px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">⚡</div>
+    <div>
+      <h1>Central de Suporte</h1>
+      <span>N1 → NOC · N2 · N3 · Supervisão · ISP/Telecom</span>
+    </div>
+  </div>
+  <div class="head-actions" id="headActions"></div>
+</header>
+
+<!-- ===== BARRA DE PROGRESSO GERAL ===== -->
+<div class="trilha">
+  <div class="trilha-card">
+    <div class="trilha-top">
+      <div>
+        <h2>🚀 Progresso geral da trilha N1 → NOC / N2 / N3</h2>
+        <div class="trilha-msg" id="trilhaMsg">Calculando seu progresso...</div>
+      </div>
+      <div class="trilha-pct"><span id="trilhaPct">0</span><small>%</small></div>
+    </div>
+    <div class="mega-bar"><div class="mega-fill" id="megaFill" style="width:0%"></div></div>
+    <div class="mega-stops">
+      <div class="mstop">
+        <div class="ml"><span>📋 Afazeres concluídos</span><b id="mTasks">0%</b></div>
+        <div class="mini-bar"><div class="mini-fill c1" id="mTasksFill" style="width:0%"></div></div>
+      </div>
+      <div class="mstop">
+        <div class="ml"><span>🎯 Objetivos atingidos</span><b id="mGoals">0%</b></div>
+        <div class="mini-bar"><div class="mini-fill c2" id="mGoalsFill" style="width:0%"></div></div>
+      </div>
+      <div class="mstop">
+        <div class="ml"><span>🧠 Domínio das aptidões</span><b id="mSkills">0%</b></div>
+        <div class="mini-bar"><div class="mini-fill c3" id="mSkillsFill" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TABS ===== -->
+<nav class="tabs">
+  <button class="tab active" data-view="objetivos">🎯 Objetivos <span class="badge" id="badge-goals">0</span></button>
+  <button class="tab" data-view="afazeres">📋 Afazeres <span class="badge" id="badge-tasks">0</span></button>
+  <button class="tab" data-view="aptidoes">🧠 Aptidões <span class="badge" id="badge-skills">0</span></button>
+  <button class="tab" data-view="analistas">👥 Analistas <span class="badge" id="badge-analysts">0</span></button>
+</nav>
+
+<!-- ===== VIEW: OBJETIVOS ===== -->
+<section class="view active" id="view-objetivos">
+  <div class="section-head">
+    <div>
+      <h2>🎯 Objetivos de crescimento N1 → NOC / N2 / N3</h2>
+      <div class="sub">Metas que transformam suporte reativo em diagnóstico cirúrgico — clique para editar.</div>
+    </div>
+    <span class="hint">⠿ Arraste pela alça para reordenar livremente</span>
+  </div>
+  <div class="goals" id="goals"></div>
+</section>
+
+<!-- ===== VIEW: AFAZERES ===== -->
+<section class="view" id="view-afazeres">
+  <div class="stats" id="stats"></div>
+  <div class="toolbar">
+    <div class="search">
+      <span>🔍</span>
+      <input type="text" id="search" placeholder="Buscar por título, descrição ou responsável...">
+    </div>
+    <div class="filters">
+      <button class="chip active" data-f="todos">Todos</button>
+      <button class="chip" data-f="alta">Alta</button>
+      <button class="chip" data-f="media">Média</button>
+      <button class="chip" data-f="baixa">Baixa</button>
+    </div>
+  </div>
+  <main class="board" id="board"></main>
+</section>
+
+<!-- ===== VIEW: APTIDÕES ===== -->
+<section class="view" id="view-aptidoes">
+  <div class="section-head">
+    <div>
+      <h2>🧠 Aptidões técnicas (ordem de prioridade)</h2>
+      <div class="sub">Da base ao avançado — clique para avaliar seu nível. Arraste pela alça para reordenar.</div>
+    </div>
+    <span class="hint">📅 Data ao lado do nome = última vez que o conhecimento foi testado</span>
+  </div>
+  <div class="skills" id="skills"></div>
+</section>
+
+<!-- ===== VIEW: ANALISTAS ===== -->
+<section class="view" id="view-analistas">
+  <div class="section-head">
+    <div>
+      <h2>👥 Analistas da equipe</h2>
+      <div class="sub">Perfil completo de cada membro — trajetória, certificações, projetos e aptidões confirmadas.</div>
+    </div>
+    <span class="hint">⠿ Arraste pela alça para reordenar</span>
+  </div>
+  <div class="analysts" id="analysts"></div>
+</section>
+
+<!-- ===== POPUP: ANALISTA ===== -->
+<div class="overlay" id="overlay-analyst">
+  <div class="popup" role="dialog" aria-modal="true" style="width:min(680px,100%)">
+    <div class="popup-head"><h2 id="analystPopTitle">Novo analista</h2><button class="x" data-close>✕</button></div>
+    <div class="popup-body">
+      <input type="hidden" id="a-id">
+      <div class="row2">
+        <div class="field"><label>Nome completo</label><input type="text" id="a-name" placeholder="Ex: João da Silva"></div>
+        <div class="field"><label>Idade</label><input type="number" id="a-age" placeholder="Ex: 27" min="16" max="80"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Data de entrada na empresa</label><input type="date" id="a-entry"></div>
+        <div class="field"><label>Cargo atual</label><input type="text" id="a-role" placeholder="Ex: Analista N1"></div>
+      </div>
+      <div class="field"><label>Cargo almejado</label><input type="text" id="a-target" placeholder="Ex: Analista NOC / N2"></div>
+
+      <!-- Certificações -->
+      <div class="field">
+        <label>Certificações</label>
+        <div class="competentes-list" id="a-certs-list"></div>
+        <div class="analyst-row-add">
+          <input type="text" id="a-cert-name" placeholder="Nome da certificação">
+          <select id="a-cert-status">
+            <option value="processo">Em processo</option>
+            <option value="concluido">Concluída</option>
+          </select>
+          <input type="date" id="a-cert-date" title="Data de aquisição">
+          <button type="button" class="btn btn-ghost comp-add-btn" id="a-cert-add">+ Salvar</button>
+        </div>
+      </div>
+
+      <!-- Projetos -->
+      <div class="field">
+        <label>Projetos / Trabalhos complexos</label>
+        <div class="competentes-list" id="a-projs-list"></div>
+        <div class="analyst-proj-add">
+          <input type="text" id="a-proj-title" placeholder="Título do projeto ou entrega">
+          <textarea id="a-proj-desc" placeholder="Como foi concluído, impacto, detalhes..." style="min-height:60px;resize:vertical"></textarea>
+          <div class="row2">
+            <input type="date" id="a-proj-date" title="Data de conclusão">
+            <button type="button" class="btn btn-ghost comp-add-btn" id="a-proj-add">+ Salvar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-foot"><button class="btn btn-danger" id="delAnalyst" style="display:none">Excluir</button><button class="btn btn-primary" id="saveAnalyst">Salvar analista</button></div>
+  </div>
+</div>
+
+<!-- ===== POPUP: TAREFA ===== -->
+<div class="overlay" id="overlay-task">
+  <div class="popup" role="dialog" aria-modal="true">
+    <div class="popup-head"><h2 id="popTitle">Novo afazer</h2><button class="x" data-close>✕</button></div>
+    <div class="popup-body">
+      <input type="hidden" id="f-id">
+      <div class="field"><label>Título do chamado</label><input type="text" id="f-title" placeholder="Ex: Estudar comandos de rede"></div>
+      <div class="field"><label>Descrição / detalhes</label><textarea id="f-desc" placeholder="Descreva a ação, passos e contexto..."></textarea></div>
+      <div class="row2">
+        <div class="field"><label>Responsável</label><input type="text" id="f-owner" placeholder="Ex: Eu"></div>
+        <div class="field"><label>Prazo</label><input type="date" id="f-due"></div>
+      </div>
+      <div class="field"><label>Prioridade</label>
+        <div class="seg">
+          <label><input type="radio" name="prio" value="alta"><span>🔴 Alta</span></label>
+          <label><input type="radio" name="prio" value="media" checked><span>🟡 Média</span></label>
+          <label><input type="radio" name="prio" value="baixa"><span>🟢 Baixa</span></label>
+        </div>
+      </div>
+      <div class="field"><label>Situação</label>
+        <select id="f-status">
+          <option value="afazer">📥 A Fazer</option>
+          <option value="andamento">⚙️ Em Andamento</option>
+          <option value="concluido">✅ Concluído</option>
+          <option value="periodico">🔁 Periódico</option>
+        </select>
+      </div>
+    </div>
+    <div class="popup-foot"><button class="btn btn-danger" id="delTask">Excluir</button><button class="btn btn-primary" id="saveTask">Salvar afazer</button></div>
+  </div>
+</div>
+
+<!-- ===== POPUP: OBJETIVO ===== -->
+<div class="overlay" id="overlay-goal">
+  <div class="popup" role="dialog" aria-modal="true">
+    <div class="popup-head"><h2 id="goalPopTitle">Novo objetivo</h2><button class="x" data-close>✕</button></div>
+    <div class="popup-body">
+      <input type="hidden" id="g-id">
+      <div class="field"><label>Objetivo</label><input type="text" id="g-title" placeholder="Ex: Reduzir escalonamentos em 40%"></div>
+      <div class="field"><label>Descrição</label><textarea id="g-desc" placeholder="Detalhe a meta, métrica-alvo e por que importa..."></textarea></div>
+      <div class="field"><label>Situação</label>
+        <div class="seg">
+          <label><input type="radio" name="gstatus" value="planejado"><span>📌 Planejado</span></label>
+          <label><input type="radio" name="gstatus" value="andamento" checked><span>⚙️ Em curso</span></label>
+          <label><input type="radio" name="gstatus" value="concluido"><span>✅ Concluído</span></label>
+        </div>
+      </div>
+      <div class="field"><label>Progresso</label>
+        <div class="rangewrap">
+          <input type="range" id="g-prog" min="0" max="100" step="5" value="0">
+          <span class="rv" id="g-prog-val">0%</span>
+        </div>
+      </div>
+    </div>
+    <div class="popup-foot"><button class="btn btn-danger" id="delGoal">Excluir</button><button class="btn btn-primary" id="saveGoal">Salvar objetivo</button></div>
+  </div>
+</div>
+
+<!-- ===== POPUP: APTIDÃO ===== -->
+<div class="overlay" id="overlay-skill">
+  <div class="popup" role="dialog" aria-modal="true">
+    <div class="popup-head"><h2 id="skillPopTitle">Nova aptidão</h2><button class="x" data-close>✕</button></div>
+    <div class="popup-body">
+      <input type="hidden" id="s-id">
+      <div class="field"><label>Assunto / Conceito</label><input type="text" id="s-title" placeholder="Ex: Diagnóstico de redes"></div>
+      <div class="field"><label>Categoria</label><input type="text" id="s-cat" placeholder="Ex: Redes, Identidade, CLI..."></div>
+      <div class="field"><label>Observações</label><textarea id="s-desc" placeholder="Notas, fontes de estudo, pontos a melhorar..."></textarea></div>
+      <div class="field">
+        <label>Competentes</label>
+        <div class="competentes-list" id="s-competentes-list"></div>
+        <div class="competentes-add">
+          <input type="text" id="s-comp-name" placeholder="Nome da pessoa">
+          <input type="date" id="s-comp-date" title="Última prova realizada">
+          <button type="button" class="btn btn-ghost comp-add-btn" id="s-comp-add">+ Salvar</button>
+        </div>
+      </div>
+      <div class="field"><label>Nível de domínio</label>
+        <div class="seg purple">
+          <label><input type="radio" name="slevel" value="1"><span>Básico</span></label>
+          <label><input type="radio" name="slevel" value="2" checked><span>Inter.</span></label>
+          <label><input type="radio" name="slevel" value="3"><span>Avançado</span></label>
+          <label><input type="radio" name="slevel" value="4"><span>Especialista</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="popup-foot"><button class="btn btn-danger" id="delSkill">Excluir</button><button class="btn btn-primary" id="saveSkill">Salvar aptidão</button></div>
+  </div>
+</div>
+
+<script>
+/* ===================== DADOS ===================== */
+const COLS=[
+  {key:'afazer',label:'A Fazer',color:'#58a6ff'},
+  {key:'andamento',label:'Em Andamento',color:'#d29922'},
+  {key:'concluido',label:'Concluído',color:'#3fb950'},
+  {key:'periodico',label:'Periódico',color:'#bc8cff'}
+];
+const LEVELS={1:{t:'Básico',c:'lv1'},2:{t:'Intermediário',c:'lv2'},3:{t:'Avançado',c:'lv3'},4:{t:'Especialista',c:'lv4'}};
+
+function isoOffset(d){const x=new Date();x.setDate(x.getDate()+d);return x.toISOString().slice(0,10);}
+
+/* ===== SEED ISP N1 → NOC / N2 / N3 / Supervisão ===== */
+const seedTasks=[
+
+  /* ── AFAZERES ── */
+  {id:101,title:'Estudar modelo OSI e TCP/IP na prática',desc:'Mapear cada camada ao que você vê no dia a dia: L1 (cabo/fibra/rádio), L2 (MAC, VLAN, STP), L3 (roteamento, IP, ICMP), L4 (portas TCP/UDP). Sem isso, o troubleshooting é chute.',owner:'Eu',due:isoOffset(4),prio:'alta',status:'afazer'},
+  {id:102,title:'Dominar leitura de sinal óptico (OLT/ONT)',desc:'Entender faixa de Rx aceitável (-8 a -27 dBm típico), identificar perda excessiva, LOS, degrad por sujo/quebrado. Praticar com relatório da OLT (ZTE, Huawei, Datacom).',owner:'Eu',due:isoOffset(3),prio:'alta',status:'afazer'},
+  {id:103,title:'Criar mapa pessoal de topologia do provedor',desc:'Desenhar (mesmo no papel) como o tráfego sai do cliente → ONT → OLT → agregação → borda → trânsito. Entender onde cada falha se encaixa.',owner:'Eu',due:isoOffset(7),prio:'alta',status:'afazer'},
+  {id:104,title:'Praticar ping/traceroute com interpretação real',desc:'Não só rodar — interpretar: latência alta no hop 1 = CPE; perda progressiva = congestionamento; timeout no hop do provedor = filtro ICMP ou rota buraco negro.',owner:'Eu',due:isoOffset(2),prio:'alta',status:'afazer'},
+  {id:105,title:'Aprender a ler tabela ARP e tabela de rotas',desc:'Saber diferenciar problema de L2 (ARP incompleto, MAC errado) de L3 (rota ausente, gateway errado). Praticar em roteador MikroTik e/ou Cisco IOS.',owner:'Eu',due:isoOffset(6),prio:'alta',status:'afazer'},
+  {id:106,title:'Montar checklist de diagnóstico por sintoma',desc:'Para cada sintoma (sem internet, lentidão, instabilidade, sem IP, latência alta) ter um roteiro: o que testar primeiro, segunda hipótese, terceira. Eliminar por camada.',owner:'Eu',due:isoOffset(5),prio:'alta',status:'afazer'},
+  {id:107,title:'Estudar DHCP: fluxo DORA e falhas comuns',desc:'Entender Discover → Offer → Request → Acknowledge. Saber diagnosticar: pool esgotado, lease expirado, conflito de IP, rogue DHCP. Diferença entre relay agent e servidor local.',owner:'Eu',due:isoOffset(8),prio:'alta',status:'afazer'},
+  {id:108,title:'Entender DNS: resolução recursiva e falhas',desc:'Fluxo completo de resolução. Diagnosticar: NXDOMAIN vs SERVFAIL vs timeout. Diferença entre DNS do provedor, 8.8.8.8 e DNS autoritativo. Testar com nslookup e dig.',owner:'Eu',due:isoOffset(10),prio:'alta',status:'afazer'},
+  {id:109,title:'Aprender sobre PPPoE e autenticação RADIUS',desc:'Entender handshake PPPoE (PADI/PADO/PADR/PADS), causas de LCP/CHAP failure, timeout de sessão. Saber o que significa cada código de erro no log de autenticação.',owner:'Eu',due:isoOffset(12),prio:'media',status:'afazer'},
+  {id:110,title:'Acompanhar plantão NOC por uma semana (shadowing)',desc:'Observar como o NOC monitora, correlaciona alertas e abre incidentes. Entender a diferença de visão entre N1 reativo e NOC proativo.',owner:'Eu',due:isoOffset(9),prio:'media',status:'afazer'},
+  {id:111,title:'Documentar os 10 chamados mais recorrentes da semana',desc:'Para cada um: sintoma relatado, causa raiz real, solução definitiva vs paliativa. Identificar padrões que apontam para problema estrutural de rede.',owner:'Eu',due:isoOffset(5),prio:'media',status:'afazer'},
+  {id:112,title:'Conversar com líder sobre critérios para NOC/N2',desc:'Entender quais habilidades técnicas e comportamentais são avaliadas. Pedir feedback honesto sobre lacunas atuais e estabelecer prazo realista.',owner:'Eu',due:isoOffset(14),prio:'media',status:'afazer'},
+  {id:113,title:'Estudar VLANs e 802.1Q',desc:'Entender tagged vs untagged, trunk vs access port, PVID. Diagnosticar cliente sem comunicação por VLAN errada na porta da OLT/switch de agregação.',owner:'Eu',due:isoOffset(15),prio:'media',status:'afazer'},
+  {id:114,title:'Aprender a interpretar logs da OLT',desc:'Identificar eventos de LOS, dying gasp, rogue ONU, optical power alarm. Correlacionar horário do evento com reclamação do cliente.',owner:'Eu',due:isoOffset(11),prio:'media',status:'afazer'},
+
+  /* ── EM ANDAMENTO ── */
+  {id:115,title:'Praticar MikroTik Winbox no laboratório virtual',desc:'Criar topologia simples: roteador com DHCP server, NAT masquerade, regras de firewall básicas. Testar conectividade e simular falhas para diagnosticar.',owner:'Eu',due:isoOffset(6),prio:'alta',status:'andamento'},
+  {id:116,title:'Estudar NAT: tipos e troubleshooting',desc:'Diferenciar NAT full-cone, restricted, port-restricted e symmetric. Entender por que aplicações quebram atrás de NAT duplo (CGNAT). Saber explicar pro cliente sem jargão.',owner:'Eu',due:isoOffset(4),prio:'alta',status:'andamento'},
+  {id:117,title:'Mapear escalonamentos do último mês',desc:'Listar todos os chamados repassados ao N2/NOC. Classificar: era resolvível no N1? Por que não foi? Quais conhecimentos estavam faltando?',owner:'Eu',due:isoOffset(1),prio:'alta',status:'andamento'},
+
+  /* ── PERIÓDICO ── */
+  {id:118,title:'Revisar alertas do NOC/monitoramento toda manhã',desc:'Antes de atender, checar se há degradação em alguma rota, OLT ou enlace. Antecipar chamados e ter contexto antes do cliente ligar.',owner:'Eu',due:isoOffset(1),prio:'alta',status:'periodico'},
+  {id:119,title:'Registrar causa raiz de cada chamado resolvido',desc:'Não fechar o ticket só com "resolvido". Anotar: hipótese inicial, o que foi testado, causa real, solução aplicada. Constrói base de conhecimento sem esforço extra.',owner:'Eu',due:isoOffset(1),prio:'media',status:'periodico'},
+  {id:120,title:'15 min diários de leitura técnica (redes/telecom)',desc:'Documentação MikroTik Wiki, Cisco NetAcad, blogs de NOC, RFC de DNS/DHCP/BGP introdutório. Pequenos blocos diários acumulam conhecimento sólido.',owner:'Eu',due:isoOffset(1),prio:'media',status:'periodico'},
+  {id:121,title:'Revisar chamados da semana toda sexta',desc:'Olhar o histórico semanal: qual tipo de problema dominou? Tem algo que eu resolvo paliativamente mas poderia resolver definitivamente se soubesse mais?',owner:'Eu',due:isoOffset(5),prio:'baixa',status:'periodico'}
+];
+
+const seedGoals=[
+  {id:201,title:'Resolver 80% dos chamados sem escalar',desc:'Meta central: cada escalonamento evitado prova competência técnica real. Medir semanalmente a taxa de resolução no primeiro contato.',status:'andamento',prog:25},
+  {id:202,title:'Entender a rede do provedor de ponta a ponta',desc:'Saber o caminho exato do pacote do cliente até a internet. Conhecer os equipamentos, protocolos e pontos de falha em cada salto. Isso transforma diagnóstico de chute em cirurgia.',status:'andamento',prog:20},
+  {id:203,title:'Dominar troubleshooting de fibra óptica (FTTH/GPON)',desc:'Interpretar potência óptica, eventos de OLT, falhas de ONT. Diferenciar problema de planta externa (rompimento, conector sujo) de problema lógico (autenticação, VLAN, DHCP).',status:'andamento',prog:35},
+  {id:204,title:'Conquistar posição em NOC ou N2 em até 12 meses',desc:'NOC exige visão sistêmica da rede e capacidade de correlacionar alertas. N2 exige profundidade técnica para resolver o que N1 não consegue. Ambos pedem o mesmo fundamento.',status:'andamento',prog:15},
+  {id:205,title:'Obter certificação Mikrotik MTCNA',desc:'Certificação prática e reconhecida no mercado ISP brasileiro. Cobre roteamento, firewall, QoS, tunnels e wireless — exatamente o que se usa no dia a dia.',status:'planejado',prog:5},
+  {id:206,title:'Aprender BGP introdutório e leitura de tabela de rotas',desc:'BGP é o protocolo que move a internet. Saber ler uma tabela de rotas, entender AS-path e prefixos permite diagnosticar falhas de trânsito/peering que hoje parecem "mágica".',status:'planejado',prog:0},
+  {id:207,title:'Construir laboratório virtual de redes (GNS3/EVE-NG)',desc:'Ambiente para testar hipóteses sem impactar produção. Simular falhas, testar comandos, entender comportamento de protocolos antes de aplicar em campo.',status:'andamento',prog:10},
+  {id:208,title:'Ser referência técnica no time de N1',desc:'Objetivo de médio prazo: ser o colega que os outros perguntam antes de escalar. Isso acontece quando o diagnóstico é consistentemente mais preciso que a média.',status:'planejado',prog:5}
+];
+
+/* nível: 1 Básico · 2 Intermediário · 3 Avançado · 4 Especialista */
+const seedSkills=[
+  {id:301,title:'Modelo OSI / TCP-IP aplicado',cat:'Fundamento absoluto',desc:'Localizar qualquer falha na camada certa. L1: físico/óptico. L2: switching/VLAN/STP. L3: roteamento/IP. L4: portas/sessões. Sem isso, o troubleshooting é aleatório.',level:2,owner:'',proofdate:''},
+  {id:302,title:'Óptica GPON/EPON — leitura e diagnóstico',cat:'ISP · FTTH',desc:'Interpretar Rx/Tx da ONT e OLT, identificar LOS, dying gasp, rogue ONU, perda por conector/emenda/quebra. Diferenciar problema óptico de problema lógico.',level:2,owner:'',proofdate:''},
+  {id:303,title:'DHCP — fluxo DORA e falhas',cat:'L3 · Protocolos essenciais',desc:'Diagnosticar pool esgotado, lease expirado, conflito de IP, rogue DHCP server, problema de relay agent. Ler logs de DHCP server e do cliente.',level:2,owner:'',proofdate:''},
+  {id:304,title:'DNS — resolução e troubleshooting',cat:'L7 · Infraestrutura',desc:'Fluxo recursivo completo, diferença entre NXDOMAIN/SERVFAIL/timeout, testar com nslookup e dig, identificar se problema é no resolver do provedor ou no autoritativo.',level:2,owner:'',proofdate:''},
+  {id:305,title:'NAT / CGNAT — tipos e impactos',cat:'L3 · ISP',desc:'NAT full-cone, symmetric, port-restricted. CGNAT e seus impactos em VoIP, jogos, VPN. Saber explicar pro cliente por que certos serviços quebram e qual a solução real.',level:1,owner:'',proofdate:''},
+  {id:306,title:'Roteamento estático e noções de OSPF',cat:'L3 · Infraestrutura',desc:'Ler e interpretar tabela de rotas, entender métrica, rota padrão, rota específica ganha sobre genérica. Noções de OSPF para entender a rede interna do provedor.',level:1,owner:'',proofdate:''},
+  {id:307,title:'VLANs (802.1Q) — tagged/untagged/trunk',cat:'L2 · Switching',desc:'Diagnosticar cliente sem comunicação por VLAN errada, trunk mal configurado, PVID incorreto. Saber como a OLT provisiona serviço por VLAN de cliente.',level:2,owner:'',proofdate:''},
+  {id:308,title:'PPPoE — handshake e autenticação RADIUS',cat:'ISP · Autenticação',desc:'Entender PADI/PADO/PADR/PADS, códigos de erro CHAP/PAP, timeout de sessão. Diferenciar falha de PPPoE de falha de L2 abaixo dele.',level:1,owner:'',proofdate:''},
+  {id:309,title:'MikroTik RouterOS — operação e diagnóstico',cat:'Equipamentos · ISP Brasil',desc:'Winbox e terminal: ler tabela de rotas, ARP, firewall, log, interface status, IP address. MTCNA como meta de certificação.',level:2,owner:'',proofdate:''},
+  {id:310,title:'ping / traceroute / mtr — interpretação profunda',desc:'Não só rodar, mas interpretar: latência no hop 1, perda progressiva vs pontual, ICMP filtrado vs hop real com problema. mtr para combinar ping e traceroute com estatística.',cat:'Diagnóstico · CLI',level:2,owner:'',proofdate:''},
+  {id:311,title:'Wireshark / tcpdump — captura básica',cat:'Diagnóstico avançado',desc:'Capturar e filtrar tráfego para confirmar hipóteses: cliente recebe DHCP offer? TCP handshake completa? DNS resolve? Não precisa ser expert — só saber confirmar o que você suspeita.',level:1,owner:'',proofdate:''},
+  {id:312,title:'Monitoramento e alertas (Zabbix/PRTG/Grafana)',cat:'NOC · Visibilidade',desc:'Entender como o NOC visualiza a rede, criar alertas simples, ler gráfico de tráfego/latência/perda. Saber correlacionar spike de alerta com chamados de clientes.',level:1,owner:'',proofdate:''},
+  {id:313,title:'Documentação técnica e gestão de incidentes',cat:'Processo · Senioridade',desc:'Escrever RCA (Root Cause Analysis) claro. Registrar causa raiz, não só sintoma. Base de conhecimento que outros podem seguir sem perguntar.',level:2,owner:'',proofdate:''},
+  {id:314,title:'BGP — leitura introdutória de tabela de rotas',cat:'L3 avançado · Trânsito',desc:'Entender AS-path, prefixos anunciados, o que é peering vs trânsito. Saber identificar se uma falha de acesso a um destino específico é problema de rota BGP.',level:1,owner:'',proofdate:''}
+];
+
+/* ===== chaves _v3 ===== */
+let tasks=load('suporte_tasks_v3',seedTasks);
+let goals=load('suporte_goals_v3',seedGoals);
+let skills=normalizeSkills(load('suporte_skills_v3',seedSkills));
+let analysts=load('suporte_analysts_v3',[]);
+let filter='todos',query='',activeView='objetivos';
+
+/* migra aptidões antigas (owner/proofdate) para o novo formato (competentes:[]) */
+function normalizeSkills(arr){
+  return arr.map(s=>{
+    if(!Array.isArray(s.competentes)){
+      const comps=[];
+      if(s.owner&&s.owner.trim()) comps.push({name:s.owner.trim(),date:s.proofdate||''});
+      return Object.assign({},s,{competentes:comps});
+    }
+    return s;
+  });
+}
+
+function load(k,def){try{const s=localStorage.getItem(k);return s?JSON.parse(s):def;}catch(e){return def;}}
+function save(){
+  localStorage.setItem('suporte_tasks_v3',JSON.stringify(tasks));
+  localStorage.setItem('suporte_goals_v3',JSON.stringify(goals));
+  localStorage.setItem('suporte_skills_v3',JSON.stringify(skills));
+  localStorage.setItem('suporte_analysts_v3',JSON.stringify(analysts));
+}
+function esc(s){return(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+function restoreSeed(){
+  if(confirm('Restaurar o plano N1 → NOC/N2/N3 original? Suas alterações serão perdidas.')){
+    tasks=JSON.parse(JSON.stringify(seedTasks));
+    goals=JSON.parse(JSON.stringify(seedGoals));
+    skills=JSON.parse(JSON.stringify(seedSkills));
+    save();renderAll();
+  }
+}
+
+/* ===================== BARRA DE PROGRESSO GERAL ===================== */
+function renderTrilha(){
+  const tPct = tasks.length ? Math.round(tasks.filter(t=>t.status==='concluido').length / tasks.length * 100) : 0;
+  const gPct = goals.length ? Math.round(goals.reduce((a,g)=>a+(+g.prog||0),0) / goals.length) : 0;
+  const sPct = skills.length ? Math.round(skills.reduce((a,s)=>a+(+s.level||0),0) / (skills.length*4) * 100) : 0;
+  const overall = Math.round(tPct*0.30 + gPct*0.40 + sPct*0.30);
+
+  set('mTasks',tPct+'%'); set('mGoals',gPct+'%'); set('mSkills',sPct+'%');
+  fill('mTasksFill',tPct); fill('mGoalsFill',gPct); fill('mSkillsFill',sPct);
+  fill('megaFill',overall);
+  animateNum('trilhaPct',overall);
+
+  let msg;
+  if(overall>=100) msg='🏆 Trilha completa! Você está pronto para NOC, N2 ou N3.';
+  else if(overall>=75) msg='🔥 Reta final! Feche as aptidões restantes e marque a conversa de promoção.';
+  else if(overall>=50) msg='💪 Mais da metade. O diagnóstico cirúrgico já está aparecendo nos chamados.';
+  else if(overall>=25) msg='📈 Bom ritmo! Foque em óptica, DHCP, DNS e interpretação de rotas.';
+  else msg='🌱 Início da trilha. Comece pelo modelo OSI na prática e pelo diagnóstico de fibra.';
+  set('trilhaMsg',msg);
+}
+function set(id,v){document.getElementById(id).textContent=v;}
+function fill(id,pct){document.getElementById(id).style.width=pct+'%';}
+function animateNum(id,target){
+  const el=document.getElementById(id);let cur=+el.textContent||0;const step=(target-cur)/20;let i=0;
+  clearInterval(el._t);
+  el._t=setInterval(()=>{cur+=step;i++;if(i>=20){cur=target;clearInterval(el._t);}el.textContent=Math.round(cur);},25);
+}
+
+function renderAll(){renderTasks();renderGoals();renderSkills();renderAnalysts();}
+
+/* ===================== TABS ===================== */
+const headActions=document.getElementById('headActions');
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>switchView(t.dataset.view));
+function switchView(v){
+  activeView=v;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
+  document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active',s.id==='view-'+v));
+  updateHeadBtn();
+}
+function updateHeadBtn(){
+  // botão principal (verde) muda conforme a aba
+  let mainBtn='';
+  if(activeView==='afazeres') mainBtn=`<button class="btn btn-primary" data-new="task">+ Novo afazer</button>`;
+  if(activeView==='objetivos') mainBtn=`<button class="btn btn-primary" data-new="goal">+ Novo objetivo</button>`;
+  if(activeView==='aptidoes') mainBtn=`<button class="btn btn-primary" data-new="skill">+ Nova aptidão</button>`;
+  if(activeView==='analistas') mainBtn=`<button class="btn btn-primary" data-new="analyst">+ Novo analista</button>`;
+
+  // menu discreto "⋯" — ações secundárias ficam escondidas aqui
+  const cleanItem = activeView==='afazeres'
+    ? `<button class="menu-item danger" data-act="clear"><span class="ico">🧹</span> Limpar concluídos</button><div class="menu-sep"></div>`
+    : '';
+
+  headActions.innerHTML = `
+    ${mainBtn}
+    <div class="menu-wrap" id="menuWrap">
+      <button class="menu-trigger" id="menuTrigger" title="Mais opções" aria-label="Mais opções">⋯</button>
+      <div class="menu-pop">
+        ${cleanItem}
+        <button class="menu-item" data-act="restore"><span class="ico">↻</span> Restaurar plano N1→NOC/N2/N3</button>
+      </div>
+    </div>`;
+
+  // ações
+  headActions.querySelectorAll('[data-new]').forEach(b=>b.onclick=()=>{
+    if(b.dataset.new==='task')openTask(null);
+    if(b.dataset.new==='goal')openGoal(null);
+    if(b.dataset.new==='skill')openSkill(null);
+    if(b.dataset.new==='analyst')openAnalyst(null);
+  });
+
+  const wrap=document.getElementById('menuWrap');
+  const trig=document.getElementById('menuTrigger');
+  trig.onclick=e=>{e.stopPropagation();wrap.classList.toggle('open');};
+  wrap.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{
+    wrap.classList.remove('open');
+    if(b.dataset.act==='clear')clearDone();
+    if(b.dataset.act==='restore')restoreSeed();
+  });
+}
+// fecha o menu ao clicar fora
+document.addEventListener('click',()=>{const w=document.getElementById('menuWrap');if(w)w.classList.remove('open');});
+
+/* ===================== AFAZERES ===================== */
+const board=document.getElementById('board'),statsEl=document.getElementById('stats');
+function avatarColor(name){const c=['#3fb950','#58a6ff','#d29922','#bc8cff','#f78166','#39c5cf'];let h=0;for(let i=0;i<name.length;i++)h=name.charCodeAt(i)+((h<<5)-h);return c[Math.abs(h)%c.length];}
+function fmtDate(iso){if(!iso)return'sem prazo';return new Date(iso+'T00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});}
+function isLate(iso,st){if(!iso||st==='concluido')return false;return new Date(iso+'T23:59')<new Date();}
+
+function renderTasks(){
+  board.innerHTML='';
+  COLS.forEach(col=>{
+    const list=tasks.filter(t=>t.status===col.key).filter(t=>filter==='todos'||t.prio===filter)
+      .filter(t=>{if(!query)return true;return(t.title+t.desc+t.owner).toLowerCase().includes(query.toLowerCase());});
+    const colEl=document.createElement('section');colEl.className='col';
+    const periodicNote = col.key==='periodico'
+      ? `<p class="periodic-note">Use esta lista para atividades que se repetem regularmente — todo dia, toda semana ou em outro ciclo fixo. Elas nunca saem daqui; apenas são feitas de novo.</p>`
+      : '';
+    colEl.innerHTML=`<div class="col-head"><h3><span class="dot" style="background:${col.color}"></span>${col.label}</h3><span class="count">${list.length}</span></div>${periodicNote}<div class="drop"></div>`;
+    const drop=colEl.querySelector('.drop');
+    if(!list.length)drop.innerHTML='<div class="empty">Nenhum afazer aqui</div>';
+    list.forEach((t,i)=>{
+      const late=isLate(t.due,t.status);
+      const el=document.createElement('article');el.className='task';el.draggable=true;el.dataset.id=t.id;el.style.animationDelay=(i*.04)+'s';
+      el.innerHTML=`<span class="ptag p-${t.prio}">${t.prio}</span><h4>${esc(t.title)}</h4>${t.desc?`<p>${esc(t.desc)}</p>`:''}
+        <div class="meta"><div class="who"><div class="ava" style="background:${avatarColor(t.owner||'?')}">${(t.owner||'?').slice(0,1).toUpperCase()}</div><span>${esc(t.owner||'—')}</span></div>
+        <div class="due ${late?'late':''}">${late?'⚠️':'📅'} ${fmtDate(t.due)}</div></div>`;
+      el.onclick=()=>openTask(t);addDrag(el);drop.appendChild(el);
+    });
+    addDrop(drop,col.key);board.appendChild(colEl);
+  });
+  renderStats();updateBadges();renderTrilha();
+}
+function renderStats(){
+  const d=[
+    {num:tasks.length,lbl:'Total',c:'#58a6ff'},
+    {num:tasks.filter(t=>t.status==='andamento').length,lbl:'Em andamento',c:'#d29922'},
+    {num:tasks.filter(t=>t.status==='concluido').length,lbl:'Concluídos',c:'#3fb950'},
+    {num:tasks.filter(t=>isLate(t.due,t.status)).length,lbl:'Atrasados',c:'#f85149'}
+  ];
+  statsEl.innerHTML=d.map(x=>`<div class="stat" style="--c:${x.c}"><div class="num">${x.num}</div><div class="lbl">${x.lbl}</div></div>`).join('');
+}
+let dragId=null;
+function addDrag(el){el.addEventListener('dragstart',()=>{dragId=+el.dataset.id;el.classList.add('dragging');});el.addEventListener('dragend',()=>el.classList.remove('dragging'));}
+function addDrop(z,st){z.addEventListener('dragover',e=>e.preventDefault());z.addEventListener('drop',e=>{e.preventDefault();const t=tasks.find(x=>x.id===dragId);if(t){t.status=st;save();renderTasks();}});}
+function clearDone(){if(tasks.some(t=>t.status==='concluido')&&confirm('Remover todos concluídos?')){tasks=tasks.filter(t=>t.status!=='concluido');save();renderTasks();}}
+
+/* ===================== OBJETIVOS (reordenação livre) ===================== */
+const goalsEl=document.getElementById('goals');
+const GSTAT={planejado:{t:'Planejado',c:'gs-planejado',col:'#58a6ff'},andamento:{t:'Em curso',c:'gs-andamento',col:'#d29922'},concluido:{t:'Concluído',c:'gs-concluido',col:'#3fb950'}};
+let goalDragId=null;
+
+function renderGoals(){
+  goalsEl.innerHTML='';
+  if(!goals.length){goalsEl.innerHTML='<div class="empty" style="grid-column:1/-1">Nenhum objetivo cadastrado. Clique em "+ Novo objetivo".</div>';}
+  goals.forEach((g,i)=>{
+    const s=GSTAT[g.status];
+    const el=document.createElement('article');
+    el.className='goal';el.dataset.id=g.id;
+    el.style.cssText=`--gc:${s.col};animation-delay:${i*.05}s`;
+    el.innerHTML=`
+      <div class="grip" title="Arraste para reordenar" draggable="true">⠿</div>
+      <div class="gtop"><span class="gstatus ${s.c}">${s.t}</span></div>
+      <h3>${esc(g.title)}</h3><p>${esc(g.desc)}</p>
+      <div class="prog-wrap"><div class="prog-lbl"><span>Progresso</span><span>${g.prog}%</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${g.prog}%"></div></div></div>`;
+    el.addEventListener('click',e=>{ if(!e.target.closest('.grip')) openGoal(g); });
+    const grip=el.querySelector('.grip');
+    grip.addEventListener('dragstart',e=>{goalDragId=g.id;el.classList.add('dragging');e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',String(g.id));}catch(_){}e.dataTransfer.setDragImage(el,el.offsetWidth/2,24);});
+    grip.addEventListener('dragend',()=>{el.classList.remove('dragging');goalsEl.querySelectorAll('.goal').forEach(c=>c.classList.remove('drop-target'));});
+    el.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='move';if(g.id!==goalDragId)el.classList.add('drop-target');});
+    el.addEventListener('dragleave',()=>el.classList.remove('drop-target'));
+    el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('drop-target');reorder(goals,goalDragId,g.id);save();renderGoals();});
+    goalsEl.appendChild(el);
+  });
+  updateBadges();renderTrilha();
+}
+
+function reorder(arr,fromId,toId){
+  if(fromId===null||fromId===toId)return;
+  const from=arr.findIndex(x=>x.id===fromId),to=arr.findIndex(x=>x.id===toId);
+  if(from<0||to<0)return;
+  const[m]=arr.splice(from,1);arr.splice(to,0,m);
+}
+
+/* ===================== APTIDÕES (reordenação por prioridade) ===================== */
+const skillsEl=document.getElementById('skills');
+let skillDragId=null;
+function renderSkills(){
+  skillsEl.innerHTML='';
+  if(!skills.length){skillsEl.innerHTML='<div class="empty" style="grid-column:1/-1">Nenhuma aptidão cadastrada. Clique em "+ Nova aptidão".</div>';}
+  skills.forEach((s,i)=>{
+    const lv=LEVELS[s.level];
+    const dots=[1,2,3,4].map(n=>`<div class="lvl-dot ${n<=s.level?'on':''}"></div>`).join('');
+    const comps=Array.isArray(s.competentes)&&s.competentes.length
+      ? `<div class="skill-meta">${s.competentes.map(c=>`<span class="skill-owner">👤 ${esc(c.name)}${c.date?` <span class="skill-proof-inline">· ${c.date.split('-').reverse().join('/')}</span>`:''}</span>`).join('')}</div>`
+      : '';
+    const el=document.createElement('article');el.className='skill';el.dataset.id=s.id;el.style.animationDelay=(i*.05)+'s';
+    el.innerHTML=`<div class="skill-grip" title="Arraste para reordenar" draggable="true">⠿</div>
+      <div class="stop"><div><h3>${esc(s.title)}</h3>${s.cat?`<span class="cat">${esc(s.cat)}</span>`:''}</div>
+      <span class="level-tag ${lv.c}">${lv.t}</span></div>
+      ${s.desc?`<p class="desc">${esc(s.desc)}</p>`:''}
+      ${comps}
+      <div class="dots">${dots}</div>`;
+    el.addEventListener('click',e=>{ if(!e.target.closest('.skill-grip')) openSkill(s); });
+    const grip=el.querySelector('.skill-grip');
+    grip.addEventListener('dragstart',e=>{skillDragId=s.id;el.classList.add('dragging');e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',String(s.id));}catch(_){}e.dataTransfer.setDragImage(el,el.offsetWidth/2,24);});
+    grip.addEventListener('dragend',()=>{el.classList.remove('dragging');skillsEl.querySelectorAll('.skill').forEach(c=>c.classList.remove('drop-target'));});
+    el.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='move';if(s.id!==skillDragId)el.classList.add('drop-target');});
+    el.addEventListener('dragleave',()=>el.classList.remove('drop-target'));
+    el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('drop-target');reorder(skills,skillDragId,s.id);save();renderSkills();});
+    skillsEl.appendChild(el);
+  });
+  updateBadges();renderTrilha();
+}
+
+/* ===================== BADGES ===================== */
+function updateBadges(){
+  document.getElementById('badge-tasks').textContent=tasks.length;
+  document.getElementById('badge-goals').textContent=goals.length;
+  document.getElementById('badge-skills').textContent=skills.length;
+  document.getElementById('badge-analysts').textContent=analysts.length;
+}
+
+/* ===================== POPUPS GERAIS ===================== */
+document.querySelectorAll('.overlay').forEach(o=>{
+  o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');});
+  o.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>o.classList.remove('open'));
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open'));});
+
+/* ---- Tarefa ---- */
+const ovTask=document.getElementById('overlay-task');
+function openTask(t){
+  document.getElementById('popTitle').textContent=t?'Editar afazer':'Novo afazer';
+  document.getElementById('f-id').value=t?t.id:'';
+  document.getElementById('f-title').value=t?t.title:'';
+  document.getElementById('f-desc').value=t?t.desc:'';
+  document.getElementById('f-owner').value=t?t.owner:'';
+  document.getElementById('f-due').value=t?t.due:'';
+  document.getElementById('f-status').value=t?t.status:'afazer';
+  document.querySelector(`input[name=prio][value=${t?t.prio:'media'}]`).checked=true;
+  document.getElementById('delTask').style.display=t?'inline-flex':'none';
+  ovTask.classList.add('open');setTimeout(()=>document.getElementById('f-title').focus(),200);
+}
+document.getElementById('saveTask').onclick=()=>{
+  const id=document.getElementById('f-id').value,title=document.getElementById('f-title').value.trim();
+  if(!title){const f=document.getElementById('f-title');f.focus();f.style.borderColor='#f85149';return;}
+  const o={title,desc:document.getElementById('f-desc').value.trim(),owner:document.getElementById('f-owner').value.trim()||'—',
+    due:document.getElementById('f-due').value,prio:document.querySelector('input[name=prio]:checked').value,status:document.getElementById('f-status').value};
+  if(id)Object.assign(tasks.find(x=>x.id===+id),o);else{o.id=Date.now();tasks.push(o);}
+  save();renderTasks();ovTask.classList.remove('open');
+};
+document.getElementById('delTask').onclick=()=>{const id=+document.getElementById('f-id').value;if(confirm('Excluir este afazer?')){tasks=tasks.filter(t=>t.id!==id);save();renderTasks();ovTask.classList.remove('open');}};
+
+/* ---- Objetivo ---- */
+const ovGoal=document.getElementById('overlay-goal');
+const gProg=document.getElementById('g-prog'),gProgVal=document.getElementById('g-prog-val');
+gProg.addEventListener('input',()=>gProgVal.textContent=gProg.value+'%');
+function openGoal(g){
+  document.getElementById('goalPopTitle').textContent=g?'Editar objetivo':'Novo objetivo';
+  document.getElementById('g-id').value=g?g.id:'';
+  document.getElementById('g-title').value=g?g.title:'';
+  document.getElementById('g-desc').value=g?g.desc:'';
+  gProg.value=g?g.prog:0;gProgVal.textContent=(g?g.prog:0)+'%';
+  document.querySelector(`input[name=gstatus][value=${g?g.status:'andamento'}]`).checked=true;
+  document.getElementById('delGoal').style.display=g?'inline-flex':'none';
+  ovGoal.classList.add('open');setTimeout(()=>document.getElementById('g-title').focus(),200);
+}
+document.getElementById('saveGoal').onclick=()=>{
+  const id=document.getElementById('g-id').value,title=document.getElementById('g-title').value.trim();
+  if(!title){const f=document.getElementById('g-title');f.focus();f.style.borderColor='#f85149';return;}
+  const o={title,desc:document.getElementById('g-desc').value.trim(),status:document.querySelector('input[name=gstatus]:checked').value,prog:+gProg.value};
+  if(id)Object.assign(goals.find(x=>x.id===+id),o);else{o.id=Date.now();goals.push(o);}
+  save();renderGoals();ovGoal.classList.remove('open');
+};
+document.getElementById('delGoal').onclick=()=>{const id=+document.getElementById('g-id').value;if(confirm('Excluir este objetivo?')){goals=goals.filter(g=>g.id!==id);save();renderGoals();ovGoal.classList.remove('open');}};
+
+/* ---- Aptidão ---- */
+const ovSkill=document.getElementById('overlay-skill');
+let tempComps=[];  // lista temporária enquanto o popup está aberto
+
+function fmtProof(iso){if(!iso)return'sem data';const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;}
+function fmtShort(iso){if(!iso)return'—';const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;}
+
+function renderTempComps(){
+  const list=document.getElementById('s-competentes-list');
+  list.innerHTML='';
+  tempComps.forEach((c,i)=>{
+    const row=document.createElement('div');row.className='comp-row';
+    row.innerHTML=`<span class="comp-name">👤 ${esc(c.name)}</span><span class="comp-date">📅 ${fmtProof(c.date)}</span><button class="comp-del" title="Remover">✕</button>`;
+    row.querySelector('.comp-del').onclick=(e)=>{e.stopPropagation();tempComps.splice(i,1);renderTempComps();};
+    list.appendChild(row);
+  });
+}
+
+function openSkill(s){
+  document.getElementById('skillPopTitle').textContent=s?'Editar aptidão':'Nova aptidão';
+  document.getElementById('s-id').value=s?s.id:'';
+  document.getElementById('s-title').value=s?s.title:'';
+  document.getElementById('s-cat').value=s?s.cat:'';
+  document.getElementById('s-desc').value=s?s.desc:'';
+  document.getElementById('s-comp-name').value='';
+  document.getElementById('s-comp-date').value='';
+  tempComps=s&&Array.isArray(s.competentes)?s.competentes.map(c=>({...c})):[];
+  renderTempComps();
+  document.querySelector(`input[name=slevel][value="${s?s.level:2}"]`).checked=true;
+  document.getElementById('delSkill').style.display=s?'inline-flex':'none';
+  ovSkill.classList.add('open');setTimeout(()=>document.getElementById('s-title').focus(),200);
+}
+
+document.getElementById('s-comp-add').onclick=()=>{
+  const name=document.getElementById('s-comp-name').value.trim();
+  if(!name){document.getElementById('s-comp-name').focus();document.getElementById('s-comp-name').style.borderColor='#f85149';return;}
+  document.getElementById('s-comp-name').style.borderColor='';
+  const date=document.getElementById('s-comp-date').value;
+  tempComps.push({name,date});
+  document.getElementById('s-comp-name').value='';
+  document.getElementById('s-comp-date').value='';
+  renderTempComps();
+  document.getElementById('s-comp-name').focus();
+};
+
+// permitir Enter no campo nome para adicionar rapidamente
+document.getElementById('s-comp-name').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('s-comp-add').click();}});
+
+document.getElementById('saveSkill').onclick=()=>{
+  const id=document.getElementById('s-id').value,title=document.getElementById('s-title').value.trim();
+  if(!title){const f=document.getElementById('s-title');f.focus();f.style.borderColor='#f85149';return;}
+  const o={title,cat:document.getElementById('s-cat').value.trim(),desc:document.getElementById('s-desc').value.trim(),
+    competentes:[...tempComps],level:+document.querySelector('input[name=slevel]:checked').value};
+  if(id)Object.assign(skills.find(x=>x.id===+id),o);else{o.id=Date.now();skills.push(o);}
+  save();renderSkills();renderAnalysts();ovSkill.classList.remove('open');
+};
+document.getElementById('delSkill').onclick=()=>{const id=+document.getElementById('s-id').value;if(confirm('Excluir esta aptidão?')){skills=skills.filter(s=>s.id!==id);save();renderSkills();ovSkill.classList.remove('open');}};
+
+/* ===================== ANALISTAS ===================== */
+const analystsEl=document.getElementById('analysts');
+let analystDragId=null;
+let tempCerts=[],tempProjs=[];
+
+function avatarColorA(name){const c=['#3fb950','#58a6ff','#d29922','#bc8cff','#f78166','#39c5cf'];let h=0;for(let i=0;i<name.length;i++)h=name.charCodeAt(i)+((h<<5)-h);return c[Math.abs(h)%c.length];}
+function tenureStr(entry){
+  if(!entry)return'—';
+  const ms=Date.now()-new Date(entry+'T00:00').getTime();
+  const days=Math.floor(ms/86400000);
+  if(days<30)return days+' dias';
+  const months=Math.floor(days/30.44);
+  if(months<12)return months+' meses';
+  const y=Math.floor(months/12),m=months%12;
+  return y+'a'+(m?` ${m}m`:'');
+}
+
+function renderAnalysts(){
+  analystsEl.innerHTML='';
+  updateBadges();
+  if(!analysts.length){analystsEl.innerHTML='<div class="empty" style="grid-column:1/-1">Nenhum analista cadastrado. Clique em "+ Novo analista".</div>';return;}
+  analysts.forEach((a,i)=>{
+    const confirmedSkills=skills.filter(sk=>Array.isArray(sk.competentes)&&sk.competentes.some(c=>c.name.trim().toLowerCase()===a.name.trim().toLowerCase()));
+    const skillTags=confirmedSkills.length
+      ? confirmedSkills.map(sk=>{
+          const comp=sk.competentes.find(c=>c.name.trim().toLowerCase()===a.name.trim().toLowerCase());
+          return`<span class="analyst-skill-tag">🧠 ${esc(sk.title)}${comp&&comp.date?` · ${comp.date.split('-').reverse().join('/')}`:''}</span>`;
+        }).join('')
+      : '<span style="color:var(--muted);font-size:.8rem">Nenhuma aptidão confirmada</span>';
+
+    const certTags=Array.isArray(a.certs)&&a.certs.length
+      ? a.certs.map(c=>{const d=c.date?c.date.split('-').reverse().join('/'):'';return`<span class="cert-tag ${c.status==='concluido'?'cert-concluido':'cert-processo'}">${c.status==='concluido'?'✅':'⏳'} ${esc(c.name)}${d?' · '+d:''}</span>`;}).join('')
+      : '<span style="color:var(--muted);font-size:.8rem">Nenhuma certificação</span>';
+
+    const projItems=Array.isArray(a.projs)&&a.projs.length
+      ? a.projs.map(p=>`<div class="proj-item"><div class="proj-head"><span class="proj-title">📁 ${esc(p.title)}</span>${p.date?`<span class="proj-date">${p.date.split('-').reverse().join('/')}</span>`:''}</div>${p.desc?`<div class="proj-desc">${esc(p.desc)}</div>`:''}</div>`).join('')
+      : '<span style="color:var(--muted);font-size:.8rem">Nenhum projeto registrado</span>';
+
+    const el=document.createElement('article');el.className='analyst-card';el.dataset.id=a.id;el.style.animationDelay=(i*.05)+'s';
+    el.innerHTML=`
+      <div class="analyst-grip" title="Arraste para reordenar" draggable="true">⠿</div>
+      <div class="analyst-header">
+        <div class="analyst-avatar" style="background:${avatarColorA(a.name)}">${esc(a.name.charAt(0).toUpperCase())}</div>
+        <div class="analyst-info">
+          <h3>${esc(a.name)}</h3>
+          <div class="analyst-role">${esc(a.role||'—')}${a.age?' · '+a.age+' anos':''}</div>
+          ${a.target?`<div class="analyst-target">🎯 Almeja: ${esc(a.target)}</div>`:''}
+        </div>
+      </div>
+      <div class="analyst-tenure">
+        <div class="analyst-tenure-item"><span class="tl">Na empresa</span><span class="tv">${tenureStr(a.entry)}</span></div>
+        ${a.entry?`<div class="analyst-tenure-item"><span class="tl">Entrada</span><span class="tv">${a.entry.split('-').reverse().join('/')}</span></div>`:''}
+      </div>
+      <div class="analyst-section"><h4>🏅 Certificações</h4>${certTags}</div>
+      <div class="analyst-section"><h4>📁 Projetos concluídos</h4>${projItems}</div>
+      <div class="analyst-section analyst-section-skills">
+        <button class="skills-toggle" type="button">
+          <span>🧠 Aptidões confirmadas <span class="skills-count">${confirmedSkills.length?`(${confirmedSkills.length})`:'(0)'}</span></span>
+          <span class="skills-chevron">▾</span>
+        </button>
+        <div class="analyst-skills-body"><div class="analyst-skills-tags">${skillTags}</div></div>
+      </div>`;
+
+    el.addEventListener('click',e=>{if(!e.target.closest('.analyst-grip')&&!e.target.closest('.skills-toggle'))openAnalyst(a);});
+    const grip=el.querySelector('.analyst-grip');
+    const toggle=el.querySelector('.skills-toggle');
+    const body=el.querySelector('.analyst-skills-body');
+    toggle.addEventListener('click',e=>{
+      e.stopPropagation();
+      const collapsed=body.classList.toggle('collapsed');
+      toggle.querySelector('.skills-chevron').textContent=collapsed?'▸':'▾';
+    });
+    grip.addEventListener('dragstart',e=>{analystDragId=a.id;el.classList.add('dragging');e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',String(a.id));}catch(_){}e.dataTransfer.setDragImage(el,el.offsetWidth/2,24);});
+    grip.addEventListener('dragend',()=>{el.classList.remove('dragging');analystsEl.querySelectorAll('.analyst-card').forEach(c=>c.classList.remove('drop-target'));});
+    el.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='move';if(a.id!==analystDragId)el.classList.add('drop-target');});
+    el.addEventListener('dragleave',()=>el.classList.remove('drop-target'));
+    el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('drop-target');reorder(analysts,analystDragId,a.id);save();renderAnalysts();});
+    analystsEl.appendChild(el);
+  });
+}
+
+/* popup analista */
+const ovAnalyst=document.getElementById('overlay-analyst');
+function renderTempCerts(){
+  const list=document.getElementById('a-certs-list');list.innerHTML='';
+  tempCerts.forEach((c,i)=>{
+    const row=document.createElement('div');row.className='comp-row';
+    row.innerHTML=`<span class="comp-name">${c.status==='concluido'?'✅':'⏳'} ${esc(c.name)}</span><span class="comp-date">${c.date?c.date.split('-').reverse().join('/'):'sem data'}</span><button class="comp-del" title="Remover">✕</button>`;
+    row.querySelector('.comp-del').onclick=e=>{e.stopPropagation();tempCerts.splice(i,1);renderTempCerts();};
+    list.appendChild(row);
+  });
+}
+function renderTempProjs(){
+  const list=document.getElementById('a-projs-list');list.innerHTML='';
+  tempProjs.forEach((p,i)=>{
+    const row=document.createElement('div');row.className='comp-row';
+    row.innerHTML=`<span class="comp-name">📁 ${esc(p.title)}</span><span class="comp-date">${p.date?p.date.split('-').reverse().join('/'):'sem data'}</span><button class="comp-del" title="Remover">✕</button>`;
+    row.querySelector('.comp-del').onclick=e=>{e.stopPropagation();tempProjs.splice(i,1);renderTempProjs();};
+    list.appendChild(row);
+  });
+}
+function openAnalyst(a){
+  document.getElementById('analystPopTitle').textContent=a?'Editar analista':'Novo analista';
+  document.getElementById('a-id').value=a?a.id:'';
+  document.getElementById('a-name').value=a?a.name:'';
+  document.getElementById('a-age').value=a?a.age:'';
+  document.getElementById('a-entry').value=a?a.entry:'';
+  document.getElementById('a-role').value=a?a.role:'';
+  document.getElementById('a-target').value=a?a.target:'';
+  document.getElementById('a-cert-name').value='';
+  document.getElementById('a-cert-date').value='';
+  document.getElementById('a-proj-title').value='';
+  document.getElementById('a-proj-desc').value='';
+  document.getElementById('a-proj-date').value='';
+  tempCerts=a&&Array.isArray(a.certs)?a.certs.map(c=>({...c})):[];
+  tempProjs=a&&Array.isArray(a.projs)?a.projs.map(p=>({...p})):[];
+  renderTempCerts();renderTempProjs();
+  document.getElementById('delAnalyst').style.display=a?'inline-flex':'none';
+  ovAnalyst.classList.add('open');setTimeout(()=>document.getElementById('a-name').focus(),200);
+}
+document.getElementById('a-cert-add').onclick=()=>{
+  const name=document.getElementById('a-cert-name').value.trim();
+  if(!name){document.getElementById('a-cert-name').focus();document.getElementById('a-cert-name').style.borderColor='#f85149';return;}
+  document.getElementById('a-cert-name').style.borderColor='';
+  tempCerts.push({name,status:document.getElementById('a-cert-status').value,date:document.getElementById('a-cert-date').value});
+  document.getElementById('a-cert-name').value='';document.getElementById('a-cert-date').value='';
+  renderTempCerts();document.getElementById('a-cert-name').focus();
+};
+document.getElementById('a-proj-add').onclick=()=>{
+  const title=document.getElementById('a-proj-title').value.trim();
+  if(!title){document.getElementById('a-proj-title').focus();document.getElementById('a-proj-title').style.borderColor='#f85149';return;}
+  document.getElementById('a-proj-title').style.borderColor='';
+  tempProjs.push({title,desc:document.getElementById('a-proj-desc').value.trim(),date:document.getElementById('a-proj-date').value});
+  document.getElementById('a-proj-title').value='';document.getElementById('a-proj-desc').value='';document.getElementById('a-proj-date').value='';
+  renderTempProjs();document.getElementById('a-proj-title').focus();
+};
+document.getElementById('saveAnalyst').onclick=()=>{
+  const id=document.getElementById('a-id').value,name=document.getElementById('a-name').value.trim();
+  if(!name){const f=document.getElementById('a-name');f.focus();f.style.borderColor='#f85149';return;}
+  const o={name,age:document.getElementById('a-age').value,entry:document.getElementById('a-entry').value,
+    role:document.getElementById('a-role').value.trim(),target:document.getElementById('a-target').value.trim(),
+    certs:[...tempCerts],projs:[...tempProjs]};
+  if(id)Object.assign(analysts.find(x=>x.id===+id),o);else{o.id=Date.now();analysts.push(o);}
+  save();renderAnalysts();ovAnalyst.classList.remove('open');
+};
+document.getElementById('delAnalyst').onclick=()=>{const id=+document.getElementById('a-id').value;if(confirm('Excluir este analista?')){analysts=analysts.filter(a=>a.id!==id);save();renderAnalysts();ovAnalyst.classList.remove('open');}};
+
+/* ===================== FILTROS ===================== */
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');filter=c.dataset.f;renderTasks();});
+document.getElementById('search').addEventListener('input',e=>{query=e.target.value;renderTasks();});
+
+/* ===================== INIT ===================== */
+updateHeadBtn();renderAll();
+</script>
+</body>
+</html>
