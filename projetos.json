@@ -1,0 +1,42 @@
+{
+  "perfil": {
+    "nome": "Little",
+    "titulo": "Desenvolvedor",
+    "bio": "Construindo ferramentas e sistemas que resolvem problemas reais.",
+    "github": "wensiodev",
+    "linkedin": "",
+    "email": ""
+  },
+  "projetos": [
+    {
+      "id": "1",
+      "nome": "Smart Chat Assistant",
+      "descricao": "Extensão Chrome com sidebar de IA integrada ao SZ Chat, com sugestões em tempo real.",
+      "tags": ["Chrome Extension", "JavaScript", "AI"],
+      "github": "https://github.com/wensiodev",
+      "demo": "",
+      "cor": "purple",
+      "destaque": true
+    },
+    {
+      "id": "2",
+      "nome": "Zoiper Notificador",
+      "descricao": "Aplicativo Python para Windows que detecta chamadas no Zoiper e exibe notificações visuais temáticas com ringtone customizado.",
+      "tags": ["Python", "Windows", "Zoiper"],
+      "github": "https://github.com/wensiodev",
+      "demo": "",
+      "cor": "teal",
+      "destaque": false
+    },
+    {
+      "id": "3",
+      "nome": "Trilha Suporte",
+      "descricao": "Tracker de treinamento da equipe de suporte com painel de progresso e backend PHP/MySQL.",
+      "tags": ["HTML", "PHP", "MySQL"],
+      "github": "https://github.com/wensiodev",
+      "demo": "https://suporten1.github.io",
+      "cor": "amber",
+      "destaque": false
+    }
+  ]
+}
