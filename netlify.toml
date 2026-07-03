@@ -1,5 +1,7 @@
 [build]
-  ignore_secrets = true
+
+[build.environment]
+  SECRETS_SCAN_ENABLED = "false"
 
 [[headers]]
   for = "/*"
