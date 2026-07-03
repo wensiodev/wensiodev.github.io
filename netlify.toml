@@ -1,0 +1,7 @@
+[build]
+  ignore_secrets = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
