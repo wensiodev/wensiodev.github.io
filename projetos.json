@@ -21,20 +21,6 @@
       "demo": "",
       "cor": "purple",
       "destaque": true
-    },
-    {
-      "id": "2",
-      "nome": "Zoiper Notificador",
-      "descricao": "Aplicativo Python para Windows que detecta chamadas no Zoiper e exibe notificaÃÂÃÂ§ÃÂÃÂµes visuais temÃÂÃÂ¡ticas com ringtone customizado.",
-      "tags": [
-        "Python",
-        "Windows",
-        "Zoiper"
-      ],
-      "github": "https://github.com/wensiodev",
-      "demo": "",
-      "cor": "teal",
-      "destaque": false
     }
   ]
 }
