@@ -11,7 +11,7 @@
     {
       "id": "1",
       "nome": "Smart Chat Assistant",
-      "descricao": "ExtensÃÂ£o Chrome com sidebar de IA integrada ao SZ Chat, com sugestÃÂµes em tempo real.",
+      "descricao": "ExtensÃÂÃÂ£o Chrome com sidebar de IA integrada ao SZ Chat, com sugestÃÂÃÂµes em tempo real.",
       "tags": [
         "Chrome Extension",
         "JavaScript",
@@ -25,7 +25,7 @@
     {
       "id": "2",
       "nome": "Zoiper Notificador",
-      "descricao": "Aplicativo Python para Windows que detecta chamadas no Zoiper e exibe notificaÃÂ§ÃÂµes visuais temÃÂ¡ticas com ringtone customizado.",
+      "descricao": "Aplicativo Python para Windows que detecta chamadas no Zoiper e exibe notificaÃÂÃÂ§ÃÂÃÂµes visuais temÃÂÃÂ¡ticas com ringtone customizado.",
       "tags": [
         "Python",
         "Windows",
@@ -34,20 +34,6 @@
       "github": "https://github.com/wensiodev",
       "demo": "",
       "cor": "teal",
-      "destaque": false
-    },
-    {
-      "id": "3",
-      "nome": "Trilha Suporte",
-      "descricao": "Tracker de treinamento da equipe de suporte com painel de progresso e backend PHP/MySQL.",
-      "tags": [
-        "HTML",
-        "PHP",
-        "MySQL"
-      ],
-      "github": "https://github.com/wensiodev",
-      "demo": "https://suporten1.github.io",
-      "cor": "amber",
       "destaque": false
     }
   ]
