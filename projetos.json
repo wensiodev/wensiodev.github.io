@@ -11,7 +11,7 @@
     {
       "id": "1",
       "nome": "Smart Chat Assistant",
-      "descricao": "ExtensÃ£o Chrome com sidebar de IA integrada ao SZ Chat, com sugestÃµes em tempo real.",
+      "descricao": "ExtensÃÂ£o Chrome com sidebar de IA integrada ao SZ Chat, com sugestÃÂµes em tempo real.",
       "tags": [
         "Chrome Extension",
         "JavaScript",
@@ -25,7 +25,7 @@
     {
       "id": "2",
       "nome": "Zoiper Notificador",
-      "descricao": "Aplicativo Python para Windows que detecta chamadas no Zoiper e exibe notificaÃ§Ãµes visuais temÃ¡ticas com ringtone customizado.",
+      "descricao": "Aplicativo Python para Windows que detecta chamadas no Zoiper e exibe notificaÃÂ§ÃÂµes visuais temÃÂ¡ticas com ringtone customizado.",
       "tags": [
         "Python",
         "Windows",
@@ -49,20 +49,6 @@
       "demo": "https://suporten1.github.io",
       "cor": "amber",
       "destaque": false
-    },
-    {
-      "id": "1783043805775",
-      "nome": "bla bla bla",
-      "descricao": "teste tes te",
-      "tags": [
-        "Python",
-        "Windows",
-        "Zoiper"
-      ],
-      "github": "https://github.com/wensiodev",
-      "demo": "asdsadasd",
-      "cor": "pink",
-      "destaque": true
     }
   ]
 }
